@@ -1,0 +1,26 @@
+{
+  "name": "mirage",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primus/mirage"
+  },
+  "keywords": [
+    "primus",
+    "mirage",
+    "persistent",
+    "session",
+    "id"
+  ],
+  "author": "Arnout Kazemier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/primus/mirage/issues"
+  },
+  "homepage": "https://github.com/primus/mirage"
+}
