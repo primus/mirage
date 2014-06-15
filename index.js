@@ -49,10 +49,12 @@ mirage.client = function client(primus) {
     });
   };
 
+  var session;
+
   primus.on('outgoing::url', function url(options) {
     var querystring = primus.querystring(options.query || '');
 
-    querystring._mirage = session;
+    querystring._mirage = (session = session || primus.guid());
     options.query = primus.querystringify(querystring);
   });
 };
