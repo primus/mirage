@@ -22,5 +22,12 @@
   "bugs": {
     "url": "https://github.com/primus/mirage/issues"
   },
-  "homepage": "https://github.com/primus/mirage"
+  "homepage": "https://github.com/primus/mirage",
+  "devDependencies": {
+    "assume": "0.0.x",
+    "mocha": "1.20.x",
+    "pre-commit": "0.0.x",
+    "primus": "*",
+    "ws": "0.4.x"
+  }
 }
