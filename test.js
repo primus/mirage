@@ -90,11 +90,15 @@ describe('mirage', function () {
   it('should queue written messages until id is received', function (next) {
     primus.use('mirage', mirage);
 
-    primus.on('data', function (msg) {
-      assume(this.mirage).to.equal('bar');
-      assume(msg).to.equal('foo');
+    primus.on('connection', function (spark) {
+      assume(spark.mirage).to.equal('bar');
 
-      this.end();
+      spark.on('data', function (msg) {
+        assume(spark.mirage).to.equal('bar');
+        assume(msg).to.equal('foo');
+
+        spark.end();
+      });
     });
 
     primus.id.generator(function generator(spark, fn) {
