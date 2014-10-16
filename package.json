@@ -30,5 +30,8 @@
     "pre-commit": "0.0.x",
     "primus": "*",
     "ws": "0.4.x"
+  },
+  "dependencies": {
+    "diagnostics": "0.0.4"
   }
 }

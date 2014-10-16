@@ -1,6 +1,7 @@
 'use strict';
 
-var crypto = require('crypto')
+var debug = require('diagnostics')('primus:mirage')
+  , crypto = require('crypto')
   , mirage = module.exports;
 
 mirage.client = function client(primus, options) {
@@ -136,11 +137,20 @@ mirage.server = function server(primus) {
    * @api private
    */
   primus.on('connection', function connection(spark, fn) {
+    debug('validating new incoming connection');
     spark.mirage = spark.query._mirage;
-    if (spark.mirage) return valid(spark, spark.mirage, fn);
 
+    if (spark.mirage) {
+      debug('found existing mirage id (%s) in query, validating', spark.mirage);
+      return valid(spark, spark.mirage, fn);
+    }
+
+    debug('generating new id as none was supplied');
     gen(spark, function generator(err, id) {
-      if (err) return fn(err);
+      if (err) {
+        debug('failed to generate an id, aborting connection due to err', err);
+        return fn(err);
+      }
 
       spark.emit('mirage', id);
       spark.mirage = id;
