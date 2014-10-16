@@ -29,9 +29,10 @@
     "mocha": "1.20.x",
     "pre-commit": "0.0.x",
     "primus": "*",
+    "primus-emit": "0.1.x",
     "ws": "0.4.x"
   },
   "dependencies": {
-    "diagnostics": "0.0.4"
+    "diagnostics": "0.0.x"
   }
 }

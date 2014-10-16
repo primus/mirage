@@ -17,6 +17,7 @@ describe('mirage', function () {
     });
 
     primus.port = port;
+    primus.use('emit', require('primus-emit'));
   });
 
   it('adds a .id to the server', function () {
@@ -89,15 +90,11 @@ describe('mirage', function () {
   it('should queue written messages until id is received', function (next) {
     primus.use('mirage', mirage);
 
-    primus.on('datas', function (spark, msg) {
-      assume(spark.mirage).to.equal('bar');
+    primus.on('data', function (msg) {
+      assume(this.mirage).to.equal('bar');
       assume(msg).to.equal('foo');
 
-      spark.end();
-    });
-
-    primus.validate('datas', function (msg, next) {
-      next('foo' === msg);
+      this.end();
     });
 
     primus.id.generator(function generator(spark, fn) {
@@ -105,7 +102,7 @@ describe('mirage', function () {
     });
 
     var client = new primus.Socket('http://localhost:'+ primus.port);
-    client.emit('datas', 'foo');
+    client.write('foo');
     client.on('end', next);
   });
 });
