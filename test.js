@@ -98,6 +98,7 @@ describe('mirage', function () {
         assume(msg).to.equal('foo');
 
         spark.end();
+        next();
       });
     });
 
@@ -107,6 +108,35 @@ describe('mirage', function () {
 
     var client = new primus.Socket('http://localhost:'+ primus.port);
     client.write('foo');
-    client.on('end', next);
+  });
+
+  it('should queue messages until id is validated', function (next) {
+    primus.use('mirage', mirage);
+
+    primus.on('connection', function (spark) {
+      assume(spark.mirage).to.equal('foo');
+
+      spark.on('data', function (msg) {
+        assume(spark.mirage).to.equal('foo');
+        assume(msg).to.equal('bar');
+
+        spark.end();
+        next();
+      });
+    });
+
+    primus.id.validator(function (spark, id, fn) {
+      assume(id).equals('foo');
+
+      setTimeout(function () {
+        fn();
+      }, 200);
+    });
+
+    var client = new primus.Socket('http://localhost:'+ primus.port, {
+      mirage: 'foo'
+    });
+
+    client.write('bar');
   });
 });
