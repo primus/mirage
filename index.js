@@ -1,85 +1,150 @@
 'use strict';
 
-var crypto = require('crypto');
+var crypto = require('crypto')
+  , mirage = module.exports;
 
-//
-// Export the exports as mirage so we can expose our plugin interface.
-//
-var mirage = module.exports;
+mirage.client = function client(primus, options) {
+  primus.mirage = primus.mirage || options.mirage || '';
 
-/**
- * The code that runs on the Primus client.
- *
- * @param {Primus} primus The primus client instance.
- * @api private
- */
-mirage.client = function client(primus) {
-  var crypto = 'undefined' !== typeof window
-    && window.crypto
-    && 'function' === typeof window.crypto.getRandomValues;
+  primus.on('mirage', function mirage(id) {
+    primus.mirage = id;
+
+    if (primus.buffer.length) {
+      var data = primus.buffer.slice()
+        , length = data.length
+        , i = 0;
+
+      primus.buffer.lenght = 0;
+
+      for (; i < length; i++) {
+        primus._write(data[i]);
+      }
+    }
+  });
 
   /**
-   * Generate a new guid for a given user. This guid is used as session
+   * Add an extra _mirage key to the URL so we can figure out we have
+   * a persistent session id or not.
    *
-   * @returns {String}
-   * @api public
+   * @param {Object} options The request options.
+   * @api private
    */
-  primus.guid = primus.guid || crypto ? function guidstrong() {
-    var bytes = new Uint16Array(8);
-    window.crypto.getRandomValues(bytes);
-
-    function section(index) {
-      var value = bytes[index].toString(16);
-
-      while (value.length < 4) value = '0'+ value;
-      return value;
-    }
-
-    return [
-      section(0) + section(1),
-      section(2),
-      section(3),
-      section(4),
-      section(5) + section(6) + section(7)
-    ].join('-');
-  } : function guid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (char) {
-      var random = Math.random() * 16 | 0;
-      return (char !== 'x' ? (random & 0x3 | 0x8) : random).toString(16);
-    });
-  };
-
-  var session;
-
   primus.on('outgoing::url', function url(options) {
+    if (!primus.mirage) return;
+
     var querystring = primus.querystring(options.query || '');
 
-    querystring._mirage = (session = session || primus.guid());
+    querystring._mirage = primus.mirage;
     options.query = primus.querystringify(querystring);
   });
+
+  /**
+   * The actual message writer.
+   *
+   * @NOTE: This function is an identical copy and paste from Primus's ._write
+   * method. The only exception is that we added a check for `primus.mirage` to
+   * determine if we are ready to write data to the server.
+   *
+   * @param {Mixed} data The message that needs to be written.
+   * @returns {Boolean} Successful write to the underlaying transport.
+   * @api private
+   */
+  primus._write = function write(data) {
+    //
+    // The connection is closed, normally this would already be done in the
+    // `spark.write` method, but as `_write` is used internally, we should also
+    // add the same check here to prevent potential crashes by writing to a dead
+    // socket.
+    //
+    if (Primus.OPEN !== primus.readyState || !primus.mirage) {
+      //
+      // If the buffer is at capacity, remove the first item.
+      //
+      if (primus.buffer.length === primus.options.queueSize) {
+        primus.buffer.splice(0, 1);
+      }
+
+      primus.buffer.push(data);
+      return false;
+    }
+
+    primus.encoder(data, function encoded(err, packet) {
+      //
+      // Do a "save" emit('error') when we fail to parse a message. We don't
+      // want to throw here as listening to errors should be optional.
+      //
+      if (err) return primus.listeners('error').length && primus.emit('error', err);
+      primus.emit('outgoing::data', packet);
+    });
+
+    return true;
+  };
 };
 
 /**
- * The code that runs on the Primus server.
+ * Server logic for generating session id's which the client is forced to use or
+ * identify him self with.
  *
- * @param {Primus} primus The primus server instance.
+ * @param {Primus} primus Server side Primus instance.
  * @api private
  */
 mirage.server = function server(primus) {
-  var Spark = primus.Spark;
+  var gen = function gen(spark, fn) {
+    crypto.randomBytes(8, function generated(err, buff) {
+      if (err) return fn(err);
+
+      fn(undefined, buff.toString('hex'));
+    });
+  };
+
+  var valid = function valid(id, fn) {
+    return fn();
+  };
+
+  primus.id = {
+    /**
+     * Add a custom session id generator.
+     *
+     * @param {Function} fn Error first completion callback.
+     * @api public
+     */
+    generator: function generator(fn) {
+      if ('function' === typeof fn) gen = fn;
+
+      return server;
+    },
+
+    /**
+     * Add a custom session id validator.
+     *
+     * @param {Function} fn Error first completion callback.
+     * @api public
+     */
+    validator: function validator(fn) {
+      if ('function' === typeof fn) valid = fn;
+
+      return server;
+    }
+  };
 
   /**
-   * Introduce a new property on the Spark's prototype so we can access our
-   * persistent session.
+   * Intercept incoming connections and block the connection event until we've
+   * gotten a valid session id.
    *
-   * @returns {String}
-   * @api public
+   * @param {Spark} spark Incoming connection.
+   * @param {Function} fn Completion callback.
+   * @api private
    */
-  Object.defineProperty(Spark.prototype, 'session', {
-    get: function get() {
-      return crypto.createHash('md5')
-        .update(this.query._mirage + this.headers.useragent)
-        .digest('hex');
-    }
+  primus.on('connection', function connection(spark, fn) {
+    spark.mirage = spark.query._mirage;
+    if (spark.mirage) return valid(spark, spark.mirage, fn);
+
+    gen(spark, function generator(err, id) {
+      if (err) return fn(err);
+
+      spark.emit('mirage', id);
+      spark.mirage = id;
+      fn();
+    });
   });
 };
