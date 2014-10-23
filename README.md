@@ -1,5 +1,8 @@
 # Mirage
 
+[![Build Status](https://travis-ci.org/primus/mirage.svg?branch=master)](https://travis-ci.org/primus/mirage)
+[![NPM version](https://badge.fury.io/js/mirage.svg)](http://badge.fury.io/js/mirage)
+
 Some might say that Mirage was created with a silver sparkplug in his mouth. On
 Cybertron, he was one of the planet's elite upper class, preferring to spend his
 days hunting turbo-foxes instead of involving himself in conflict. He is armed
