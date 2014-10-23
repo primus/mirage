@@ -4,6 +4,13 @@ var debug = require('diagnostics')('primus:mirage')
   , crypto = require('crypto')
   , mirage = module.exports;
 
+/**
+ * The client interface of the mirage client.
+ *
+ * @param {Primus} primus The Primus connection.
+ * @param {Object} options The supplied options from the new Primus constructor
+ * @api public
+ */
 mirage.client = function client(primus, options) {
   primus.mirage = primus.mirage || options.mirage || '';
 
@@ -87,9 +94,21 @@ mirage.client = function client(primus, options) {
  * identify him self with.
  *
  * @param {Primus} primus Server side Primus instance.
+ * @param {Object} options The supplied options to the Primus constructor.
  * @api private
  */
-mirage.server = function server(primus) {
+mirage.server = function server(primus, options) {
+  /**
+   * Generator of session ids. It should call the callback with a string that
+   * should be used as session id. If a generation failed you should set an
+   * error as first argument in the callback.
+   *
+   * This function will only be called if there is no id sent with the request.
+   *
+   * @param {Spark} spark The incoming connection.
+   * @param {Function} fn Completion callback.
+   * @api public
+   */
   var gen = function gen(spark, fn) {
     crypto.randomBytes(8, function generated(err, buff) {
       if (err) return fn(err);
@@ -98,6 +117,13 @@ mirage.server = function server(primus) {
     });
   };
 
+  /**
+   * Simple validator function for when a user connects with an existing id.
+   *
+   * @param {String} id The id that we've received from the client.
+   * @param {Function} fn Completion callback.
+   * @api public
+   */
   var valid = function valid(id, fn) {
     return fn();
   };
