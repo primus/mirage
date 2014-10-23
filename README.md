@@ -28,7 +28,15 @@ This module assumes that you're also using the `primus-emit` module plugin for
 emitting events. If you don't have it added a plugin please see the [relevant
 installation instructions](https://github.com/primus/emit) on how to do so.
 
-## Usage
+## Table of Contents
+
+- [Usage server](#usage-server)
+  - [primus.id.timeout](#primusidtimeout)
+  - [primus.id.generator](#primusidgenerator)
+  - [primus.id.validator](#primusidvalidator)
+- [Usage client](#usage-client)
+
+## Usage server
 
 The `mirage` plugin should be the first plugin you load in Primus. This is
 because it will buffer incoming messages while it's validating or generating
@@ -110,6 +118,29 @@ primus.id.validator(function validator(id, fn) {
   });
 });
 ```
+
+## Usage client
+
+The plugin also ships with a client API. This client API can be used for
+persisting the sessions across reconnects, refreshes and more. To re-use an id
+simply add the `mirage` option in the client when connecting. 
+
+```js
+var socket = new Primus('https://example.org', {
+  mirage: readcookie('sessionid')
+});
+```
+
+When you receive a new session id from the server we emit an `mirage` event:
+
+```js
+socket.on('mirage', function (id) {
+  savecookie('sessionid', id);
+});
+```
+
+The id is also always available at: `socket.mirage`. But this is only after the
+connection has generated an id or if you've manually supplied it.
 
 ## License
 
