@@ -103,14 +103,16 @@ The validator method will be called when we've received a pre-defined id. By
 default we just allow all the things, but this can be overridden by supplying
 the `primus.id.validator` with a custom validator function.
 
-The supplied function will receive 2 arguments:
+The supplied function will receive 3 arguments:
 
-1. `session` The session id that we've received and that needs to be validated.
-2. `function` An error first callback. If you fail to validate the id, we assume
+1. `spark` A reference to the spark instance that is attempting to connect to
+   your server.
+2. `session` The session id that we've received and that needs to be validated.
+3. `function` An error first callback. If you fail to validate the id, we assume
    that you pass this function an `Error` instance as first argument.
 
 ```js
-primus.id.validator(function validator(id, fn) {
+primus.id.validator(function validator(spark, id, fn) {
   accountdb.exists(id, function (err, exists) {
     if (!err && !exists) err = new Error('Invalid id');
 
