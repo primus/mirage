@@ -55,9 +55,9 @@ describe('mirage', function () {
   it('allows pre-setting of mirage id through constructor', function (next) {
     primus.use('mirage', mirage);
 
-    primus.id.validator(function validator(spark, id, fn) {
+    primus.id.validator(function validator(spark, fn) {
       assume(spark.query).to.be.a('object');
-      assume(id).to.equal('ohai');
+      assume(spark.mirage).to.equal('ohai');
 
       fn(new Error('I SHOULD BE OK'));
     });
@@ -72,9 +72,9 @@ describe('mirage', function () {
   it('validates the client mirage if send', function (next) {
     primus.use('mirage', mirage);
 
-    primus.id.validator(function validator(spark, id, fn) {
+    primus.id.validator(function validator(spark, fn) {
       assume(spark.query).to.be.a('object');
-      assume(id).to.equal('ohai');
+      assume(spark.mirage).to.equal('ohai');
 
       fn(new Error('I SHOULD BE OK'));
     });
@@ -126,8 +126,8 @@ describe('mirage', function () {
       });
     });
 
-    primus.id.validator(function (spark, id, fn) {
-      assume(id).equals('foo');
+    primus.id.validator(function (spark, fn) {
+      assume(spark.mirage).equals('foo');
 
       setTimeout(function () {
         fn();

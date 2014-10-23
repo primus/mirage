@@ -219,11 +219,11 @@ mirage.server = function server(primus, options) {
 
     if (spark.mirage) {
       debug('found existing mirage id (%s) in query, validating', spark.mirage);
-      return valid(spark, spark.mirage, next);
+      return valid.call(primus, spark, next);
     }
 
     debug('generating new id as none was supplied');
-    gen(spark, function generator(err, id) {
+    gen.call(primus, spark, function generator(err, id) {
       if (err) return next(err);
 
       spark.emit('mirage', id);
