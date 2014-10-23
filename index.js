@@ -2,6 +2,7 @@
 
 var debug = require('diagnostics')('primus:mirage')
   , crypto = require('crypto')
+  , one = require('one-time')
   , mirage = module.exports;
 
 /**
@@ -142,6 +143,16 @@ mirage.server = function server(primus, options) {
     },
 
     /**
+     * The maximum time it should take to validate or generate a session id. If
+     * a timeout occurs all messages will be flushed and the callback with be
+     * called with an error.
+     *
+     * @type {Number}
+     * @api public
+     */
+    timeout: options['mirage timeout'] || 5000,
+
+    /**
      * Add a custom session id validator.
      *
      * @param {Function} fn Error first completion callback.
@@ -164,23 +175,76 @@ mirage.server = function server(primus, options) {
    */
   primus.on('connection', function connection(spark, fn) {
     debug('validating new incoming connection');
+
     spark.mirage = spark.query._mirage;
+    spark.buffer = [];
+
+    /**
+     * A simple callback wrapping that ensures that we flush the messages that
+     * we've buffered while we were generating or validating and id. If we
+     * receive an error, we just ignore all received messages and assume they
+     * are evil.
+     *
+     * @param {Error} err An error that we've received.
+     * @api public
+     */
+    var next = one(function processed(err) {
+      var buffer = spark.buffer;
+      spark.buffer = null;
+
+      if (err) {
+        debug('failed to process request due to %s', err.message);
+        return fn(err);
+      } else fn();
+
+      //
+      // We need to send the buffer after we've called the `fn` callback so we
+      // no longer block the `connection` event. After this we've given the user
+      // time enough to assign a `data` listener to their `spark` instance and
+      // we can safely re-transform the data.
+      //
+      debug('writing %d queued messages to spark', buffer.length);
+      buffer.forEach(function each(packet) {
+        spark.transforms(primus, spark, 'incoming', packet.data, packet.raw);
+      });
+    });
+
+    //
+    // Prevent the validation or generation from taking to much time. Add
+    // a timeout.
+    //
+    var timeout = setTimeout(function timeout() {
+      next(new Error('Failed to '+ (spark.mirrage ? 'validate' : 'generate') +' id in a timely manner'));
+    }, primus.id.timeout);
 
     if (spark.mirage) {
       debug('found existing mirage id (%s) in query, validating', spark.mirage);
-      return valid(spark, spark.mirage, fn);
+      return valid(spark, spark.mirage, next);
     }
 
     debug('generating new id as none was supplied');
     gen(spark, function generator(err, id) {
-      if (err) {
-        debug('failed to generate an id, aborting connection due to err', err);
-        return fn(err);
-      }
+      if (err) return next(err);
 
       spark.emit('mirage', id);
       spark.mirage = id;
-      fn();
+
+      next();
     });
+  });
+
+  /**
+   * Add a incoming message transformer so we can buffer messages that arrive
+   * while we are generating or validating an id.
+   *
+   * @param {Object} packet The incoming data message.
+   * @returns {Boolean|Undefined}
+   * @api public
+   */
+  primus.transform('incoming', function incoming(packet) {
+    if (this.buffer) {
+      this.buffer.push(packet);
+      return false;
+    }
   });
 };

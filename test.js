@@ -118,6 +118,7 @@ describe('mirage', function () {
 
       spark.on('data', function (msg) {
         assume(spark.mirage).to.equal('foo');
+        assume(spark.buffer).to.equal(null);
         assume(msg).to.equal('bar');
 
         spark.end();

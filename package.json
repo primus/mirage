@@ -33,6 +33,7 @@
     "ws": "0.4.x"
   },
   "dependencies": {
-    "diagnostics": "0.0.x"
+    "diagnostics": "0.0.x",
+    "one-time": "0.0.2"
   }
 }
