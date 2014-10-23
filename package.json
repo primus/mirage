@@ -1,6 +1,6 @@
 {
   "name": "mirage",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Custom session id syncing and validation",
   "main": "index.js",
   "scripts": {
