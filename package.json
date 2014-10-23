@@ -1,6 +1,6 @@
 {
   "name": "mirage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Custom session id syncing and validation",
   "main": "index.js",
   "scripts": {
@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "diagnostics": "0.0.x",
-    "one-time": "0.0.2"
+    "one-time": "0.0.x"
   }
 }
