@@ -55,6 +55,21 @@ describe('mirage', function () {
         next();
       });
     });
+
+    it('generates things by default', function (next) {
+      primus.use('mirage', mirage);
+
+      var client = new primus.Socket('http://localhost:'+ primus.port);
+
+      client.on('mirage', function (id) {
+        assume(client.mirage).to.equal(id);
+        assume(id.length).to.be.above(8);
+        assume(id).to.be.a('string');
+
+        client.end();
+        next();
+      });
+    });
   });
 
   describe('.id.timeout', function () {
@@ -107,6 +122,20 @@ describe('mirage', function () {
   });
 
   describe('.id.validator', function () {
+    it('accepts all the things by default', function (next) {
+      primus.use('mirage', mirage);
+
+      primus.on('connection', function (spark) {
+        assume(spark.mirage).to.equal('lol');
+        spark.end();
+        next();
+      });
+
+      var client = new primus.Socket('http://localhost:'+ primus.port, {
+        mirage: 'lol'
+      });
+    });
+
     it('allows pre-setting of mirage id through constructor', function (next) {
       primus.use('mirage', mirage);
 
