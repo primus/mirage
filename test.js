@@ -224,5 +224,31 @@ describe('mirage', function () {
 
       client.write('bar');
     });
+
+    it('can override the id', function (next) {
+      primus.use('mirage', mirage);
+
+      primus.on('connection', function (spark) {
+        assume(spark.mirage).to.equal('new');
+        spark.on('end', next);
+      });
+
+      primus.id.validator(function generator(spark, fn) {
+        assume(spark.mirage).equals('old');
+
+        setTimeout(function () {
+          fn(undefined, 'new');
+        }, 10);
+      });
+
+      var client = new primus.Socket('http://localhost:'+ primus.port, {
+        mirage: 'old'
+      });
+
+      client.on('mirage', function (id) {
+        assume(id).equals('new');
+        client.end();
+      });
+    });
   });
 });
