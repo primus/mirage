@@ -57,6 +57,55 @@ describe('mirage', function () {
     });
   });
 
+  describe('.id.timeout', function () {
+    it('is a number', function () {
+      primus.use('mirage', mirage);
+
+      assume(primus.id.timeout).is.a('number');
+    });
+
+    it('can be set by default through the constructor', function () {
+      var p = new Primus(require('http').createServer(), {
+        'mirage timeout': 12345678
+      });
+
+      p.use('emit', require('primus-emit'));
+      p.use('mirage', mirage);
+
+      assume(p.id.timeout).equals(12345678);
+    });
+
+    it('will timeout a validation request', function (next) {
+      primus.use('mirage', mirage);
+
+      primus.id.timeout = 100;
+      primus.id.validator(function validator(spark, fn) {
+        spark.on('error', function (err) {
+          assume(err.message).to.include('timely manner');
+          next();
+        });
+      });
+
+      var client = new primus.Socket('http://localhost:'+ primus.port, {
+        mirage: 'ohai'
+      });
+    });
+
+    it('will timeout a generator request', function (next) {
+      primus.use('mirage', mirage);
+
+      primus.id.timeout = 100;
+      primus.id.generator(function validator(spark, fn) {
+        spark.on('error', function (err) {
+          assume(err.message).to.include('timely manner');
+          next();
+        });
+      });
+
+      var client = new primus.Socket('http://localhost:'+ primus.port);
+    });
+  });
+
   describe('.id.validator', function () {
     it('allows pre-setting of mirage id through constructor', function (next) {
       primus.use('mirage', mirage);
