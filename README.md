@@ -121,7 +121,21 @@ primus.id.validator(function validator(spark, fn) {
 ```
 
 As you can see in the example above, the mirage `id` is introduced on the spark
-as `spark.mirage`. You can use this id to validate the connnection.
+as `spark.mirage`. You can use this id to validate the connection. Now there are
+cases where you don't want to end the connection by supplying the callback with
+an error but you actually want to re-set a new session id. Well that's also
+possible with the validator as it can also act as an generator. To generate a
+new session id you can call supply the new id as second argument in the
+callback:
+
+```js
+primus.id.validator(function validate(spark, fn) {
+  if (spark.mirage === 'old') return fn(undefined, 'new');
+  if (spark.mirage === 'new') return fn(undefined, 'old');
+
+  fn(new Error('The id is was not new or old'));
+});
+```
 
 ## Usage client
 
