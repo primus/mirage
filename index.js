@@ -12,6 +12,7 @@ var debug = require('diagnostics')('primus:mirage')
  * @param {Object} options The supplied options from the new Primus constructor
  * @api public
  */
+/* istanbul ignore next */
 mirage.client = function client(primus, options) {
   primus.mirage = primus.mirage || options.mirage || '';
 
