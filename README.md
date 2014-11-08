@@ -1,7 +1,6 @@
 # Mirage
 
-[![Build Status](https://travis-ci.org/primus/mirage.svg?branch=master)](https://travis-ci.org/primus/mirage)
-[![NPM version](https://badge.fury.io/js/mirage.svg)](http://badge.fury.io/js/mirage)
+[![Version npm](http://img.shields.io/npm/v/mirage.svg?style=flat-square)](http://browsenpm.org/package/mirage)[![Build Status](http://img.shields.io/travis/primus/mirage/master.svg?style=flat-square)](https://travis-ci.org/primus/mirage)[![Dependencies](https://img.shields.io/david/primus/mirage.svg?style=flat-square)](https://david-dm.org/primus/mirage)[![Coverage Status](http://img.shields.io/coveralls/primus/mirage/master.svg?style=flat-square)](https://coveralls.io/r/primus/mirage?branch=master)[![IRC channel](http://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](http://webchat.freenode.net/?channels=primus)
 
 Some might say that Mirage was created with a silver sparkplug in his mouth. On
 Cybertron, he was one of the planet's elite upper class, preferring to spend his
