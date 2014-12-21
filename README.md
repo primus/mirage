@@ -28,7 +28,8 @@ package.json.
 
 This module assumes that you're also using the `primus-emit` module plugin for
 emitting events. If you don't have it added a plugin please see the [relevant
-installation instructions](https://github.com/primus/emit) on how to do so.
+installation instructions](https://github.com/primus/emit) on how to do so. (If
+you are using primus-emitter, it will also work with this plugin.)
 
 ## Table of Contents
 
