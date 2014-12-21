@@ -199,7 +199,9 @@ mirage.server = function server(primus, options) {
       // bluntly disconnecting.
       //
       if (id) {
-        spark.emit('mirage', id);
+        if (spark.send) spark.send('mirage', id);
+        else spark.emit('mirage', id);
+
         spark.mirage = id;
       }
 
