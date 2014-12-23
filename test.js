@@ -1,4 +1,3 @@
-/* istanbul ignore next */
 describe('mirage', function () {
   'use strict';
 

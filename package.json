@@ -4,9 +4,7 @@
   "description": "Custom session id syncing and validation",
   "main": "index.js",
   "scripts": {
-    "coverage": "istanbul cover node_modules/.bin/_mocha -- --reporter spec --ui bdd test.js",
-    "test": "mocha --reporter spec test.js",
-    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- --reporter spec --ui bdd test.js"
+    "test": "mocha --reporter spec test.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +25,6 @@
   "homepage": "https://github.com/primus/mirage",
   "devDependencies": {
     "assume": "0.0.x",
-    "istanbul": "0.3.2",
     "mocha": "1.20.x",
     "pre-commit": "0.0.x",
     "primus": "*",
