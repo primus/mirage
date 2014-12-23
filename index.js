@@ -121,11 +121,11 @@ mirage.server = function server(primus, options) {
   /**
    * Simple validator function for when a user connects with an existing id.
    *
-   * @param {String} id The id that we've received from the client.
+   * @param {Spark} spark Reference to the spark instance that is connecting.
    * @param {Function} fn Completion callback.
    * @api public
    */
-  var valid = function valid(id, fn) {
+  var valid = function valid(spark, fn) {
     return fn();
   };
 
@@ -231,7 +231,7 @@ mirage.server = function server(primus, options) {
     // a timeout.
     //
     var timeout = setTimeout(function timeout() {
-      generateorvalidate(new Error('Failed to '+ (spark.mirrage ? 'validate' : 'generate') +' id in a timely manner'));
+      generateorvalidate(new Error('Failed to '+ (spark.mirage ? 'validate' : 'generate') +' id in a timely manner'));
     }, primus.id.timeout);
 
     if (spark.mirage) {
