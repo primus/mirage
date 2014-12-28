@@ -29,7 +29,7 @@
     "pre-commit": "0.0.x",
     "primus": "*",
     "primus-emit": "0.1.x",
-    "ws": "0.4.x"
+    "ws": "0.6.x"
   },
   "dependencies": {
     "diagnostics": "0.0.x",
