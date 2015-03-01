@@ -4,7 +4,7 @@
   "description": "Custom session id syncing and validation",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec test.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -24,12 +24,12 @@
   },
   "homepage": "https://github.com/primus/mirage",
   "devDependencies": {
-    "assume": "0.0.x",
+    "assume": "1.1.x",
     "mocha": "2.1.x",
-    "pre-commit": "0.0.x",
+    "pre-commit": "1.0.x",
     "primus": "*",
     "primus-emit": "0.1.x",
-    "ws": "0.6.x"
+    "ws": "0.7.x"
   },
   "dependencies": {
     "diagnostics": "0.0.x",
