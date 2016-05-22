@@ -23,7 +23,7 @@ mirage.client = function client(primus, options) {
         , length = data.length
         , i = 0;
 
-      primus.buffer.lenght = 0;
+      primus.buffer.length = 0;
 
       for (; i < length; i++) {
         primus._write(data[i]);
