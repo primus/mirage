@@ -17,14 +17,14 @@ describe('mirage', function () {
     });
 
     primus.port = port;
-    primus.use('emit', require('primus-emit'));
+    primus.plugin('emit', require('primus-emit'));
   });
 
   describe('.id', function () {
     it('adds a .id to the server', function () {
       assume(primus.id).to.be.a('undefined');
 
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       assume(primus.id).to.be.a('object');
       assume(primus.id.generator).to.be.a('function');
@@ -34,7 +34,7 @@ describe('mirage', function () {
 
   describe('.id.generator', function () {
     it('calls the generator function & sends to client', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.on('connection', function connection(spark) {
         assume(spark.mirage).to.equal('foo');
@@ -56,7 +56,7 @@ describe('mirage', function () {
     });
 
     it('generates things by default', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       var client = new primus.Socket('http://localhost:'+ primus.port);
 
@@ -73,7 +73,7 @@ describe('mirage', function () {
 
   describe('.id.timeout', function () {
     it('is a number', function () {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       assume(primus.id.timeout).is.a('number');
     });
@@ -83,14 +83,14 @@ describe('mirage', function () {
         'mirage timeout': 12345678
       });
 
-      p.use('emit', require('primus-emit'));
-      p.use('mirage', mirage);
+      p.plugin('emit', require('primus-emit'));
+      p.plugin('mirage', mirage);
 
       assume(p.id.timeout).equals(12345678);
     });
 
     it('will timeout a validation request', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.id.timeout = 100;
       primus.id.validator(function validator(spark, fn) {
@@ -106,7 +106,7 @@ describe('mirage', function () {
     });
 
     it('will timeout a generator request', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.id.timeout = 100;
       primus.id.generator(function validator(spark, fn) {
@@ -122,7 +122,7 @@ describe('mirage', function () {
 
   describe('.id.validator', function () {
     it('accepts all the things by default', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.on('connection', function (spark) {
         assume(spark.mirage).to.equal('lol');
@@ -136,7 +136,7 @@ describe('mirage', function () {
     });
 
     it('allows pre-setting of mirage id through constructor', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.id.validator(function validator(spark, fn) {
         assume(spark.query).to.be.a('object');
@@ -153,7 +153,7 @@ describe('mirage', function () {
     });
 
     it('validates the client mirage if send', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.id.validator(function validator(spark, fn) {
         assume(spark.query).to.be.a('object');
@@ -171,7 +171,7 @@ describe('mirage', function () {
     });
 
     it('should queue written messages until id is received', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.on('connection', function (spark) {
         assume(spark.mirage).to.equal('bar');
@@ -194,7 +194,7 @@ describe('mirage', function () {
     });
 
     it('should queue messages until id is validated', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.on('connection', function (spark) {
         assume(spark.mirage).to.equal('foo');
@@ -225,7 +225,7 @@ describe('mirage', function () {
     });
 
     it('can override the id', function (next) {
-      primus.use('mirage', mirage);
+      primus.plugin('mirage', mirage);
 
       primus.on('connection', function (spark) {
         assume(spark.mirage).to.equal('new');
