@@ -25,9 +25,9 @@
   "homepage": "https://github.com/primus/mirage",
   "devDependencies": {
     "assume": "1.4.x",
-    "mocha": "2.4.x",
+    "mocha": "2.5.x",
     "pre-commit": "1.1.x",
-    "primus": "5.2.x",
+    "primus": "6.0.x",
     "primus-emit": "1.0.x",
     "ws": "1.1.x"
   },
