@@ -1,6 +1,6 @@
 # Mirage
 
-[![Version npm](http://img.shields.io/npm/v/mirage.svg?style=flat-square)](http://browsenpm.org/package/mirage)[![Build Status](http://img.shields.io/travis/primus/mirage/master.svg?style=flat-square)](https://travis-ci.org/primus/mirage)[![Dependencies](https://img.shields.io/david/primus/mirage.svg?style=flat-square)](https://david-dm.org/primus/mirage)[![Coverage Status](http://img.shields.io/coveralls/primus/mirage/master.svg?style=flat-square)](https://coveralls.io/r/primus/mirage?branch=master)[![IRC channel](http://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](http://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/mirage.svg?style=flat-square)](http://browsenpm.org/package/mirage)[![Build Status](https://img.shields.io/travis/primus/mirage/master.svg?style=flat-square)](https://travis-ci.org/primus/mirage)[![Dependencies](https://img.shields.io/david/primus/mirage.svg?style=flat-square)](https://david-dm.org/primus/mirage)[![Coverage Status](https://img.shields.io/coveralls/primus/mirage/master.svg?style=flat-square)](https://coveralls.io/r/primus/mirage?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
 
 Some might say that Mirage was created with a silver sparkplug in his mouth. On
 Cybertron, he was one of the planet's elite upper class, preferring to spend his
@@ -47,11 +47,11 @@ an id. If you don't do this, **you will experience loss of data/messages!**.
 Even the [`fortess-maximus`](https://github.com/primus/fortress-maximus) plugin,
 that is generally added as the first plugin, should be loaded after `mirage`.
 
-To add this plugin to your Primus server simply call the `.use` method on the
+To add this plugin to your Primus server simply call the `.plugin` method on the
 Primus instance:
 
 ```js
-primus.use('mirage', require('mirage'));
+primus.plugin('mirage', require('mirage'));
 ```
 
 Now that you've added the plugin, a new object, `.id` is available on your Primus
@@ -164,4 +164,4 @@ connection has generated an id or if you've manually supplied it.
 
 ## License
 
-MIT
+[MIT](LICENSE)
