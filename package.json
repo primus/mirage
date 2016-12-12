@@ -32,7 +32,7 @@
     "ws": "~1.1.1"
   },
   "dependencies": {
-    "diagnostics": "~1.0.1",
+    "diagnostics": "~1.1.0",
     "one-time": "~0.0.4"
   }
 }
