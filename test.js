@@ -20,6 +20,10 @@ describe('mirage', function () {
     primus.plugin('emit', require('primus-emit'));
   });
 
+  afterEach(function each(next) {
+    primus.destroy(next);
+  });
+
   describe('.id', function () {
     it('adds a .id to the server', function () {
       assume(primus.id).to.be.a('undefined');
@@ -78,7 +82,7 @@ describe('mirage', function () {
       assume(primus.id.timeout).is.a('number');
     });
 
-    it('can be set by default through the constructor', function () {
+    it('can be set by default through the constructor', function (next) {
       var p = new Primus(require('http').createServer(), {
         'mirage timeout': 12345678
       });
@@ -87,6 +91,7 @@ describe('mirage', function () {
       p.plugin('mirage', mirage);
 
       assume(p.id.timeout).equals(12345678);
+      p.destroy(next);
     });
 
     it('will timeout a validation request', function (next) {
