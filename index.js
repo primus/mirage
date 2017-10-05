@@ -189,6 +189,8 @@ mirage.server = function server(primus, options) {
      * @api public
      */
     var generateorvalidate = one(function processed(err, id) {
+      clearTimeout(timeout);
+
       var buffer = spark.buffer;
       spark.buffer = null;
 
