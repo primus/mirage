@@ -1,6 +1,6 @@
 # Mirage
 
-[![Version npm](https://img.shields.io/npm/v/mirage.svg?style=flat-square)](https://www.npmjs.com/package/mirage)[![Build Status](https://img.shields.io/github/workflow/status/primus/mirage/CI/master?label=CI&style=flat-square)](https://github.com/primus/mirage/actions?query=workflow%3ACI+branch%3Amaster)[![Dependencies](https://img.shields.io/david/primus/mirage.svg?style=flat-square)](https://david-dm.org/primus/mirage)[![Coverage Status](https://img.shields.io/coveralls/primus/mirage/master.svg?style=flat-square)](https://coveralls.io/r/primus/mirage?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/mirage.svg?style=flat-square)](https://www.npmjs.com/package/mirage)[![Build Status](https://img.shields.io/github/workflow/status/primus/mirage/CI/master?label=CI&style=flat-square)](https://github.com/primus/mirage/actions?query=workflow%3ACI+branch%3Amaster)[![Coverage Status](https://img.shields.io/coveralls/primus/mirage/master.svg?style=flat-square)](https://coveralls.io/r/primus/mirage?branch=master)
 
 Some might say that Mirage was created with a silver sparkplug in his mouth. On
 Cybertron, he was one of the planet's elite upper class, preferring to spend his
